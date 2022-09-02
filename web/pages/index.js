@@ -1,10 +1,17 @@
 import { gql, GraphQLClient } from "graphql-request";
 
 import React from "react";
+import Navbar from "../components/Navbar";
 
 const Home = ({ heroPage }) => {
   console.log(heroPage);
-  return <h1 className="text-3xl font-bold">Hello world!</h1>;
+  const hex1 = heroPage.gradientColor1.hex;
+  const hex2 = heroPage.gradientColor2.hex;
+  return (
+    <div className="flex flex-row items-center justify-center">
+      <Navbar />
+    </div>
+  );
 };
 
 export default Home;
