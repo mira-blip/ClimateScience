@@ -1,12 +1,11 @@
-import{gql, GraphQLClient} from 'graphql-request';
+import { gql, GraphQLClient } from "graphql-request";
 
-import React from 'react'
+import React from "react";
 
-const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+const Home = ({ heroPage }) => {
+  console.log(heroPage);
+  return <h1 className="text-3xl font-bold">Hello world!</h1>;
+};
 
 export default Home;
 
@@ -14,27 +13,41 @@ const query = gql`
   query {
     heroPage {
       id
-      header {
-        big text
-        small text
+      gradientColor1 {
+        hex
       }
-      youtube link
-      gradient color 1
-      gradient color 2
+      gradientColor2 {
+        hex
+      }
+      header {
+        ... on HeroTextRecord {
+          bigText
+          smallText
+        }
+      }
+      youtubeLink {
+        url
+        title
+        height
+        width
+        provider
+        thumbnailUrl
+      }
     }
   }
-`
-export async function getStaticPrompts () {
+`;
+export async function getStaticProps() {
+  console.log(process.env.DATOCMS_API_KEY);
   const endpoint = "https://graphql.datocms.com/";
   const graphQLClient = new GraphQLClient(endpoint, {
     headers: {
       "content-type": "application/json",
-      authorization: "Bearer " + process.env.DATOCMS_API_KEY
-    }
+      authorization: "Bearer " + process.env.DATOCMS_API_KEY,
+    },
   });
-  const hero_page = await graphQLClient.request(query);
+  const heroPage = await graphQLClient.request(query);
   console.log(heroPage);
   return {
-    props: heroPage
-  }
+    props: heroPage,
+  };
 }
