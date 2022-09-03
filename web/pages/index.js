@@ -1,10 +1,20 @@
 import { gql, GraphQLClient } from "graphql-request";
-
+import Navbar from '../components/Navbar';
+import HeroPage from "../components/HeroPage";
 import React from "react";
 
 const Home = ({ heroPage }) => {
   console.log(heroPage);
-  return <h1 className="text-3xl font-bold">Hello world!</h1>;
+  const hex1 = heroPage?.gradientColor1.hex;
+  const hex2 = heroPage?.gradientColor2.hex;
+  const bigText = heroPage?.header[0].bigText;
+  const smallText = heroPage?.header[0].smallText;
+  const urlIndex = heroPage?.youtubeLink.url.lastIndexOf('/');
+  const vidID = heroPage?.youtubeLink.url.slice(urlIndex);
+  return <div className="w-full h-screen font-sans">
+    {/* <Navbar/> */}
+    <HeroPage hex1={hex1} hex2={hex2} bigText={bigText} smallText={smallText} url={vidID}/>
+  </div>
 };
 
 export default Home;
