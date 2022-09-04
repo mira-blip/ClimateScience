@@ -8,11 +8,12 @@ module.exports = {
       colors: {
         'primary-purple': '#7A81FF',
         'primary-blue':'#5259FF',
-        'dark-text':'#334354'
+        'dark-text':'#334354',
+        'pale-pink': '#E3D1FF',
       },
-      fontFamily: {
-        'sans': ['Work Sans']
-      }
+      // fontFamily: {
+      //   'sans': ['Work Sans']
+      // }
     },
   },
   plugins: [],

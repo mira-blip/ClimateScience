@@ -1,15 +1,18 @@
 import { gql, GraphQLClient } from "graphql-request";
-
-import React from "react";
 import Navbar from "../components/Navbar";
+import HeroPage from "../components/HeroPage";
+import React from "react";
 
-const Home = ({ heroPage }) => {
-  console.log(heroPage);
-  const hex1 = heroPage.gradientColor1.hex;
-  const hex2 = heroPage.gradientColor2.hex;
+const Home = ({ homePage }) => {
+  const { blocks } = homePage.body;
+  const { bigText, smallText, youtube } = blocks[0];
+  const { url } = youtube;
+  const vidID = url.slice(url.lastIndexOf("/"));
+
   return (
-    <div className="flex flex-row items-center justify-center">
+    <div className="flex flex-col items-center w-full h-screen font-sans">
       <Navbar />
+      <HeroPage bigText={bigText} smallText={smallText} url={vidID} />
     </div>
   );
 };
@@ -18,27 +21,39 @@ export default Home;
 
 const query = gql`
   query {
-    heroPage {
-      id
-      gradientColor1 {
-        hex
-      }
-      gradientColor2 {
-        hex
-      }
-      header {
-        ... on HeroTextRecord {
-          bigText
-          smallText
+    homePage {
+      name
+      body {
+        blocks {
+          ... on HeroTextRecord {
+            bigText
+            smallText
+            youtube {
+              url
+              title
+              provider
+            }
+          }
+          ... on WhoAreWeRecord {
+            bigtext
+            littletext
+            gallery {
+              url
+            }
+          }
+          ... on OurGoalRecord {
+            bigtext
+            minitext
+            goal {
+              blocks {
+                goaltext
+                goalPicture {
+                  url
+                }
+              }
+            }
+          }
         }
-      }
-      youtubeLink {
-        url
-        title
-        height
-        width
-        provider
-        thumbnailUrl
       }
     }
   }
@@ -53,7 +68,7 @@ export async function getStaticProps() {
     },
   });
   const heroPage = await graphQLClient.request(query);
-  console.log(heroPage);
+  console.log(heroPage, heroPage.homePage);
   return {
     props: heroPage,
   };
