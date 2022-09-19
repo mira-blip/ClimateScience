@@ -2,17 +2,51 @@ import { gql, GraphQLClient } from "graphql-request";
 import Navbar from "../components/Navbar";
 import HeroPage from "../components/HeroPage";
 import React from "react";
+import WhoAreWe from "../components/WhoAreWe";
+import OurGoal from "../components/OurGoal";
 
-const Home = ({ homePage }) => {
-  const { blocks } = homePage.body;
-  const { bigText, smallText, youtube } = blocks[0];
+const getHeroPageRecord = (blocks) => {
+  const heroPageRecord = blocks[0];
+  const { bigText, smallText, youtube } = heroPageRecord;
   const { url } = youtube;
   const vidID = url.slice(url.lastIndexOf("/"));
 
+  return {
+    bigText,
+    smallText,
+    url: vidID,
+  };
+};
+
+const getWhoAreWeRecord = (blocks) => {
+  const whoAreWeRecord = blocks[1];
+  const { bigText, littleText, gallery } = whoAreWeRecord;
+  return {
+    title: bigText,
+    description: littleText,
+    images: gallery,
+  };
+};
+
+const getOurGoalRecord = (blocks) => {
+  const ourGoalRecord = blocks[2];
+  const { bigText, miniText, goal } = ourGoalRecord;
+  return {
+    bigText,
+    miniText,
+    goals: goal.blocks.map((el) => el),
+  };
+};
+
+const Home = ({ homePage }) => {
+  const { blocks } = homePage.body;
+
   return (
-    <div className="flex flex-col items-center w-full h-screen font-sans">
+    <div className="flex flex-col items-center font-sans">
       <Navbar />
-      <HeroPage bigText={bigText} smallText={smallText} url={vidID} />
+      {/* <HeroPage bigText={bigText} smallText={smallText} url={vidID} /> */}
+      <WhoAreWe {...getWhoAreWeRecord(blocks)} />
+      <OurGoal {...getOurGoalRecord(blocks)} />
     </div>
   );
 };
@@ -35,15 +69,15 @@ const query = gql`
             }
           }
           ... on WhoAreWeRecord {
-            bigtext
-            littletext
+            bigText
+            littleText
             gallery {
               url
             }
           }
           ... on OurGoalRecord {
-            bigtext
-            minitext
+            bigText
+            miniText
             goal {
               blocks {
                 goaltext
